@@ -6,12 +6,12 @@ def main():
 	robot = Robot()
 	while True:
 		try:
-			instruction = input('What to do? Type \'move\' for moving, \'turn\' for turning and \'print\' for printing the current position of the robot.\n')
+			instruction = input('What to do? Type \'move\' for moving, \'turn\' for turning, \'print\' for printing the current position of the robot and \'hist\' for printing the history of positions of the robot.\n')
 			print()
 			
 			# verifying the input instruction will either be 'move' or 'turn'
-			while instruction != 'move' and instruction != 'turn' and instruction != 'print':
-				instruction = input('Wrong instruction. Type \'move\' for moving, \'turn\' for turning and \'print\' for printing the current position of the robot.\n')
+			while instruction != 'move' and instruction != 'turn' and instruction != 'print' and instruction != 'hist':
+				instruction = input('Wrong instruction. Type \'move\' for moving, \'turn\' for turning, \'print\' for printing the current position of the robot and \'hist\' for printing the history of positions of the robot.\n')
 			
 			if instruction == 'move':
 				move_instruction = input('Forward or backward? Type \'forward\' for forward and \'backward\' for backward\n')
@@ -34,7 +34,10 @@ def main():
 				print()
 
 			elif instruction == 'print':
-				robot.print() 
+				robot.print_pos() 
+
+			elif instruction == 'hist':
+				robot.print_history()
 
 			else:
 				pass

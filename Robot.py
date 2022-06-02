@@ -1,3 +1,5 @@
+from collections import deque
+
 class Robot:
 	''' A class implementing a robot moving in an infinite 2D space. '''
 	def __init__(self, row_pos = 0, col_pos = 0, heading = 0):
@@ -13,6 +15,8 @@ class Robot:
 		self.row_pos = row_pos
 		self.col_pos = col_pos
 		self.heading = heading
+		self.heading_directions = {0:'south', 1:'west', 2:'north', 3:'east'}	# for transforming integer heading to string
+		self.history = deque()	# queue that holds the past positions of the robot
 
 	def turn(self, turn_instruction):
 		'''
@@ -32,6 +36,7 @@ class Robot:
 				self.heading = 3
 		else:
 			pass
+		self.history.append((self.row_pos, self.col_pos, self.heading))
 
 	def move(self, move_instruction):
 		'''
@@ -65,13 +70,38 @@ class Robot:
 				pass
 		else:
 			pass
+		self.history.append((self.row_pos, self.col_pos, self.heading))
 
-	def print(self):
-		'''
-		Prints the current position of the robot.
+	def print_history(self):
+		''' Prints the history of past positions of the robot (from oldest to current). '''
 
-		'''
-		heading_directions = {0:'south', 1:'west', 2:'north', 3:'east'}
+		# we need a temp queue to store the positions dequeued from the history queue
+		temp_history = deque()
+		history_length = len(self.history)
+		while history_length != 0:
+			# past position
+			pos = self.history.popleft()
+			past_row_pos = pos[0]
+			past_col_pos = pos[1]
+			past_heading = pos[2]
+
+			print('({row_pos}, {col_pos}, {heading})'.format(row_pos = past_row_pos, col_pos = past_col_pos, heading = self.heading_directions[past_heading]), end='')
+			if history_length != 1:
+				print(' -> ', end='')
+			temp_history.append(pos)
+			history_length = len(self.history)
+
+		# enqueue past positions back to the history queue
+		history_length = len(temp_history)
+		while history_length != 0:
+			self.history.append(temp_history.popleft())
+			history_length = len(temp_history)
+
+		# for pretty-printing
+		print('\n')
+
+	def print_pos(self):
+		''' Prints the current position of the robot. '''
 		print('------ Current Position ------')
-		print('({row_pos}, {col_pos}, {heading})'.format(row_pos = self.row_pos, col_pos = self.col_pos, heading = heading_directions[self.heading]))
+		print('({row_pos}, {col_pos}, {heading})'.format(row_pos = self.row_pos, col_pos = self.col_pos, heading = self.heading_directions[self.heading]))
 		print()
