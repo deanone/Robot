@@ -44,7 +44,7 @@ def main():
 		except KeyboardInterrupt:
 			break
 
-	print('\nGoodbye!')
+	print('\nBye!')
 
 
 if __name__ == '__main__':

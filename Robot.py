@@ -2,21 +2,21 @@ from collections import deque
 
 class Robot:
 	''' A class implementing a robot moving in an infinite 2D space. '''
-	def __init__(self, row_pos = 0, col_pos = 0, heading = 0):
+	def __init__(self, row_position = 0, column_position = 0, heading = 0):
 		'''
 		Parametrized constructor.
 		
 		Parameters:
-		row_pos (int): the row position of the robot
-		col_pos (int): the column position of the robot
+		row_position (int): the row position of the robot
+		col_position (int): the column position of the robot
 		heading (int): the heading of the robot. It can only take four values [0, 1, 2, 3] that correspond to the directions [south, west, north, east]
 		
 		'''
-		self.row_pos = row_pos
-		self.col_pos = col_pos
+		self.row_position = row_position
+		self.column_position = column_position
 		self.heading = heading
 		self.heading_directions = {0:'south', 1:'west', 2:'north', 3:'east'}	# for transforming integer heading to string
-		self.history = deque()	# queue that holds the past positions of the robot
+		self.positions_history = deque()	# queue that holds the past positions of the robot
 
 	def turn(self, turn_instruction):
 		'''
@@ -36,7 +36,7 @@ class Robot:
 				self.heading = 3
 		else:
 			pass
-		self.history.append((self.row_pos, self.col_pos, self.heading))
+		self.positions_history.append((self.row_position, self.column_position, self.heading))
 
 	def move(self, move_instruction):
 		'''
@@ -48,54 +48,53 @@ class Robot:
 		'''
 		if move_instruction == 'forward':
 			if self.heading == 0:
-				self.row_pos += 1
+				self.row_position += 1
 			elif self.heading == 1:
-				self.col_pos -= 1
+				self.column_position -= 1
 			elif self.heading == 2:
-				self.row_pos -= 1
+				self.row_position -= 1
 			elif self.heading == 3:
-				self.col_pos += 1
+				self.column_position += 1
 			else:
 				pass
 		elif move_instruction == 'backward':
 			if self.heading == 0:
-				self.row_pos -= 1
+				self.row_position -= 1
 			elif self.heading == 1:
-				self.col_pos += 1
+				self.column_position += 1
 			elif self.heading == 2:
-				self.row_pos += 1
+				self.row_position += 1
 			elif self.heading == 3:
-				self.col_pos -= 1
+				self.column_position -= 1
 			else:
 				pass
 		else:
 			pass
-		self.history.append((self.row_pos, self.col_pos, self.heading))
+		self.positions_history.append((self.row_position, self.column_position, self.heading))
 
 	def print_history(self):
 		''' Prints the history of past positions of the robot (from oldest to current). '''
 
 		# we need a temp queue to store the positions dequeued from the history queue
-		temp_history = deque()
-		history_length = len(self.history)
-		while history_length != 0:
-			# past position
-			pos = self.history.popleft()
-			past_row_pos = pos[0]
-			past_col_pos = pos[1]
-			past_heading = pos[2]
+		temp_positions_history = deque()
+		positions_history_length = len(self.positions_history)
+		while positions_history_length != 0:
+			past_position = self.positions_history.popleft()
+			past_row_position = past_position[0]
+			past_column_position = past_position[1]
+			past_heading = past_position[2]
 
-			print('({row_pos}, {col_pos}, {heading})'.format(row_pos = past_row_pos, col_pos = past_col_pos, heading = self.heading_directions[past_heading]), end='')
-			if history_length != 1:
+			print('({row_position}, {column_position}, {heading})'.format(row_position = past_row_position, column_position = past_column_position, heading = self.heading_directions[past_heading]), end='')
+			if positions_history_length != 1:
 				print(' -> ', end='')
-			temp_history.append(pos)
-			history_length = len(self.history)
+			temp_positions_history.append(past_position)
+			positions_history_length = len(self.positions_history)
 
 		# enqueue past positions back to the history queue
-		history_length = len(temp_history)
-		while history_length != 0:
-			self.history.append(temp_history.popleft())
-			history_length = len(temp_history)
+		temp_positions_history_length = len(temp_positions_history)
+		while temp_positions_history_length != 0:
+			self.positions_history.append(temp_positions_history.popleft())
+			temp_positions_history_length = len(temp_positions_history)
 
 		# for pretty-printing
 		print('\n')
@@ -103,5 +102,5 @@ class Robot:
 	def print_pos(self):
 		''' Prints the current position of the robot. '''
 		print('------ Current Position ------')
-		print('({row_pos}, {col_pos}, {heading})'.format(row_pos = self.row_pos, col_pos = self.col_pos, heading = self.heading_directions[self.heading]))
+		print('({row_position}, {column_position}, {heading})'.format(row_position = self.row_position, column_position = self.column_position, heading = self.heading_directions[self.heading]))
 		print()
